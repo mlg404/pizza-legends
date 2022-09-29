@@ -8,6 +8,8 @@ class OverworldMap {
 
     this.upperImage = new Image()
     this.upperImage.src = config.upperSrc
+
+    this.isCutscenePlaying = true
   }
 
   drawLowerImage(context, cameraPerson) {
@@ -32,19 +34,44 @@ class OverworldMap {
   }
 
   mountObjects() {
-    Object.values(this.gameObjects).forEach(object => object.mount(this))
+    Object.keys(this.gameObjects).forEach(key => {
+      let object = this.gameObjects[key]
+      object.id = key
+
+      object.mount(this)
+    })
   }
 
   addWall(coordinates) {
     this.walls[coordinates.join(',')] = true
   }
+
   removeWall(coordinates) {
     delete this.walls[coordinates.join(',')]
   }
+
   moveWall(initialCoordinates, direction) {
     this.removeWall(initialCoordinates)
     const nextPosition = utils.nextPosition(initialCoordinates[0], initialCoordinates[1], direction)
     this.addWall(nextPosition)
+  }
+
+  async startCutscene(events) {
+    this.isCutscenePlaying = true
+
+    for (let i = 0; i < events.length; i++) {
+      const eventHandler = new OverworldEvent({
+        map: this,
+        event: events[i]
+      })
+
+      await eventHandler.init()
+    }
+
+
+    this.isCutscenePlaying = false
+
+    Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this))
   }
 }
 
@@ -62,7 +89,25 @@ window.OverworldMaps = {
         x: utils.withGrid(7),
         y: utils.withGrid(9),
         src: './images/characters/people/npc1.png',
-      })
+        behaviorLoop: [
+          { type: 'stand', direction: 'down', time: 800 },
+          { type: 'stand', direction: 'up', time: 800 },
+          { type: 'stand', direction: 'left', time: 1200 },
+          { type: 'stand', direction: 'down', time: 300 },
+        ]
+      }),
+      pcA: new Person({
+        x: utils.withGrid(3),
+        y: utils.withGrid(7),
+        src: './images/characters/people/npc2.png',
+        behaviorLoop: [
+          { type: 'walk', direction: "left" },
+          { type: 'stand', direction: 'down', time: 1500 },
+          { type: 'walk', direction: "up" },
+          { type: 'walk', direction: "right" },
+          { type: 'walk', direction: "down" },
+        ]
+      }),
     },
     walls: {
       // Table
@@ -98,8 +143,7 @@ window.OverworldMaps = {
         x: utils.withGrid(9),
         y: utils.withGrid(6),
         src: './images/characters/people/npc2.png',
-      })
-      ,
+      }),
       npcB: new Person({
         x: utils.withGrid(10),
         y: utils.withGrid(8),

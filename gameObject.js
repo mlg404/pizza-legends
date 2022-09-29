@@ -1,5 +1,6 @@
 class GameObject {
   constructor(config) {
+    this.id = null
     this.isMounted = false
     this.x = config.x || 0;
     this.y = config.y || 0;
@@ -9,15 +10,37 @@ class GameObject {
       src: config.src || './images/characters/people/hero.png',
     });
     this.context = config.context;
+
+    this.behaviorLoop = config.behaviorLoop || []
+    this.behavioLoopIndex = 0
   }
 
   mount(map) {
-    console.log('mounting')
     this.isMounted = true
     map.addWall([this.x, this.y])
+
+    setTimeout(() => {
+      this.doBehaviorEvent(map)
+    }, 1000)
   }
 
   update() {
 
+  }
+
+  async doBehaviorEvent(map) {
+
+    if (map.isCutscenePlaying || this.behaviorLoop.length === 0 || this.isStanding) return
+
+    let eventConfig = this.behaviorLoop[this.behavioLoopIndex]
+    eventConfig.who = this.id
+
+    const eventHandler = new OverworldEvent({ map, event: eventConfig })
+    await eventHandler.init()
+
+    this.behavioLoopIndex += 1
+    if (this.behavioLoopIndex === this.behaviorLoop.length) this.behavioLoopIndex = 0
+
+    this.doBehaviorEvent(map)
   }
 }
