@@ -9,10 +9,11 @@ class GameObject {
       gameObject: this,
       src: config.src || './images/characters/people/hero.png',
     });
-    this.context = config.context;
 
     this.behaviorLoop = config.behaviorLoop || []
     this.behavioLoopIndex = 0
+
+    this.talking = config.talking || []
   }
 
   mount(map) {

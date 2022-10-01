@@ -67,4 +67,15 @@ const utils = {
     document.dispatchEvent(event)
   },
 
+  oppositeDirection(direction) {
+    const opposite = {
+      "left": "right",
+      "right": "left",
+      "up": "down",
+      "down": "up"
+    }
+
+    return opposite[direction]
+  }
+
 }

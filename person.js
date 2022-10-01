@@ -24,7 +24,7 @@ class Person extends GameObject {
           direction: state.arrow
         })
       }
-      this.updateSprite()
+      this.updateSprite(state)
     }
   }
 
@@ -35,7 +35,7 @@ class Person extends GameObject {
       if (state.map.isSpaceTaken(this.x, this.y, this.direction)) {
         behavior.retry && setTimeout(() => {
           this.startBehavior(state, behavior)
-        }, 1000)
+        }, 100)
         return
       }
 
