@@ -55,7 +55,6 @@ class OverworldEvent {
 
     if (this.event.faceHero) {
       const obj = this.map.gameObjects[this.event.faceHero]
-      console.log(this.map.gameObjects["hero"].direction)
       obj.direction = utils.oppositeDirection(this.map.gameObjects["hero"].direction)
     }
 
@@ -68,8 +67,14 @@ class OverworldEvent {
   }
 
   changeMap(resolve) {
-    this.map.overworld.startMap(window.OverworldMaps[this.event.map])
-    resolve()
+
+    const sceneTransition = new SceneTransition()
+    sceneTransition.init(document.querySelector('.game-container'), () => {
+      this.map.overworld.startMap(window.OverworldMaps[this.event.map])
+      resolve()
+
+      sceneTransition.fadeOut()
+    })
   }
 
   init() {

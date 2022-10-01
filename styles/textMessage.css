@@ -11,10 +11,17 @@
   color: var(--menu-font-color);
 
 }
+
 .TextMessage_p {
   margin: 0;
   font-size: 12px;
+}
 
+.TextMessage span {
+  opacity: 0
+}
+.TextMessage span.revealed {
+  opacity: 1
 }
 
 .TextMessage_button {
