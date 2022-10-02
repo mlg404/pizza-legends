@@ -1,8 +1,22 @@
 class SubmissionMenu {
-  constructor({ caster, enemy, onComplete }) {
+  constructor({ caster, enemy, onComplete, items }) {
     this.caster = caster;
     this.onComplete = onComplete;
     this.enemy = enemy;
+
+    let quantityMap = {}
+    items.forEach(item => {
+      if (item.team !== caster.team) return
+
+      quantityMap[item.actionId] = {
+        actionId: item.actionId,
+        quantity: quantityMap[item.actionId]?.quantity + 1 || 1,
+        instanceId: item.instanceId
+      }
+
+    })
+
+    this.items = Object.values(quantityMap)
   }
 
   getPages() {
@@ -53,11 +67,18 @@ class SubmissionMenu {
         backOption
       ],
       items: [
-        {
-          label: "item",
-          description: "item iii",
-          handler: () => { }
-        },
+        ...this.items.map(item => {
+          const action = Actions[item.actionId]
+          return {
+            label: action.name,
+            description: action.description,
+            right: () => `x${item.quantity}`,
+            handler: () => {
+              console.log(item)
+              this.menuSubmit(action, item.instanceId)
+            }
+          }
+        }),
         backOption
       ],
     }
@@ -69,7 +90,8 @@ class SubmissionMenu {
 
     this.onComplete({
       action,
-      target: action.targetType === "friendly" ? this.caster : this.enemy
+      target: action.targetType === "friendly" ? this.caster : this.enemy,
+      instanceId
     })
   }
 

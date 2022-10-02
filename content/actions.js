@@ -26,4 +26,24 @@ window.Actions = {
     ]
   },
 
+  item_recoverStatus: {
+    name: "Heating Lamp",
+    description: "Feeling fresh and warm",
+    targetType: "friendly",
+    success: [
+      { type: "textMessage", text: "{CASTER} uses a {ACTION}" },
+      { type: "stateChange", status: null },
+      { type: "textMessage", text: "Feeling Fresh!!" },
+    ]
+  },
+  item_recoverHp: {
+    name: "Parmesan",
+    targetType: "friendly",
+    success: [
+      { type: "textMessage", text: "{CASTER} sprinkles on some {ACTION}" },
+      { type: "stateChange", recover: 10 },
+      { type: "textMessage", text: "{CASTER} recovers HP" },
+    ]
+  }
+
 }
