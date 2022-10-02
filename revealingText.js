@@ -12,6 +12,7 @@ class RevealingText {
   async revealOneCharacter(characters) {
     this.timeout = await setTimeout(() => {
       const next = characters.shift()
+      if (!next) return this.isDone = true
       next.span.classList.add("revealed")
       this.revealOneCharacter(characters)
 
