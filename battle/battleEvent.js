@@ -59,13 +59,52 @@ class BattleEvent {
   }
 
   submissionMenu(resolve) {
+    const { caster } = this.event
     const menu = new SubmissionMenu({
       caster: this.event.caster,
       enemy: this.event.enemy,
       items: this.battle.items,
+      replacements: Object
+        .values(this.battle.combatants)
+        .filter(combatant =>
+          combatant.id !== caster.id &&
+          combatant.team === caster.team &&
+          combatant.hp > 0
+        ),
       onComplete: (submission) => resolve(submission)
     })
     menu.init(this.battle.element)
+  }
+
+  async replace(resolve) {
+    const { replacement } = this.event
+
+    const prevCombatant = this.battle.combatants[this.battle.activeCombatants[replacement.team]]
+    this.battle.activeCombatants[replacement.team] = null
+    prevCombatant.update()
+
+    await utils.wait(400)
+
+    this.battle.activeCombatants[replacement.team] = replacement.id
+    replacement.update()
+    await utils.wait(400)
+
+    resolve()
+
+  }
+
+  replacementMenu(resolve) {
+    const menu = new ReplacementMenu({
+      replacements: Object.values(this.battle.combatants)
+        .filter(combatant =>
+          combatant.team === this.event.team &&
+          combatant.hp > 0
+        ),
+      onComplete: replacement => resolve(replacement)
+    })
+
+    menu.init(this.battle.element)
+
   }
 
   animation(resolve) {

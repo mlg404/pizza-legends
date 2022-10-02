@@ -18,6 +18,21 @@ class TurnCycle {
       enemy
     })
 
+    if (submission.replacement) {
+      await this.onNewEvent({
+        type: "replace",
+        replacement: submission.replacement
+      })
+      await this.onNewEvent({
+        type: "textMessage",
+        text: `Go get 'em ${submission.replacement.name}!`
+      })
+
+      this.nextTurn()
+
+      return
+    }
+
     if (submission.instanceId) {
       this.battle.items = this.battle.items.filter(i => i.instanceId !== submission.instanceId)
     }
@@ -33,6 +48,44 @@ class TurnCycle {
         target: submission.target
       }
       await this.onNewEvent(event)
+    }
+
+    const targetDead = submission.target.hp <= 0
+    if (targetDead) {
+      await this.onNewEvent({
+        type: "textMessage",
+        text: `${submission.target.name} has been defeated!`
+      })
+    }
+
+    const winner = this.getWinningTeam()
+    if (winner) {
+      await this.onNewEvent({
+        type: "textMessage",
+        text: `Winner`
+      })
+      return
+
+    }
+
+    if (targetDead) {
+      const replacement = await this.onNewEvent({
+        type: "replacementMenu",
+        team: submission.target.team
+      })
+
+      await this.onNewEvent({
+        type: "replace",
+        replacement
+      })
+      await this.onNewEvent({
+        type: "textMessage",
+        text: `${replacement.name} shows up!`
+      })
+      // await this.onNewEvent({
+      //   type: "textMessage",
+      //   text: `${submission.target.name} has been defeated!`
+      // })
     }
 
 
@@ -54,8 +107,26 @@ class TurnCycle {
     }
 
 
+    this.nextTurn()
+  }
+
+  nextTurn() {
     this.currentTeam = utils.oppositeTeam(this.currentTeam)
     this.turn()
+  }
+
+  getWinningTeam() {
+    let aliveTeam = {};
+    Object.values(this.battle.combatants).forEach(combatant => {
+      if (combatant.hp > 0) {
+        aliveTeam[combatant.team] = true;
+      }
+    })
+
+    if (!aliveTeam.enemy) return "player"
+    if (!aliveTeam.player) return "enemy"
+
+    return null;
   }
 
   async init() {
