@@ -76,6 +76,19 @@ const utils = {
     }
 
     return opposite[direction]
+  },
+
+  oppositeTeam(team) {
+    const opposite = {
+      "player": "enemy",
+      "enemy": "player"
+    }
+
+    return opposite[team]
+  },
+
+  wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 
 }
