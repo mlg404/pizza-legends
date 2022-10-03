@@ -148,6 +148,7 @@ class Battle {
           playerState.items = playerState.items
             .filter(item => !this.usedInstanceIds[item.instanceId])
 
+          utils.emitEvent("PLayerStateUpdated")
         }
 
         this.element.remove()
