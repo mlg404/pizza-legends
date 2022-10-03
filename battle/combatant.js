@@ -13,7 +13,7 @@ class Combatant {
     return this.xp / this.maxXp * 100
   }
 
-  get IsActive() {
+  get isActive() {
     return this.battle.activeCombatants[this.team] === this.id
   }
 
@@ -55,8 +55,8 @@ class Combatant {
       this[key] = changes[key]
     })
 
-    this.hudElement.setAttribute("data-active", this.IsActive)
-    this.pizzaElement.setAttribute("data-active", this.IsActive)
+    this.hudElement.setAttribute("data-active", this.isActive);
+    this.pizzaElement.setAttribute("data-active", this.isActive)
 
     this.hpFills.forEach(rect => rect.style.width = `${this.hpPercent}%`)
     this.xpFills.forEach(rect => rect.style.width = `${this.xpPercent}%`)
