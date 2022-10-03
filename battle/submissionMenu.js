@@ -112,7 +112,8 @@ class SubmissionMenu {
   }
 
   decide() {
-    this.menuSubmit(Actions[this.caster.actions[0]])
+    const randomMove = utils.randomFromArray(this.caster.actions)
+    this.menuSubmit(Actions[randomMove])
   }
 
   showMenu(container) {
