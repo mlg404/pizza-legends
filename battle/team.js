@@ -34,7 +34,6 @@ class Team {
 
   update() {
     this.combatants.forEach(combatant => {
-      console.log(combatant)
       const icon = this.element.querySelector(`[data-combatant="${combatant.id}"]`)
       icon.setAttribute("data-dead", combatant.hp <= 0)
       icon.setAttribute("data-active", combatant.isActive)

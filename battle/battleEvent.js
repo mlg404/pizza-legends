@@ -99,6 +99,29 @@ class BattleEvent {
 
   }
 
+  giveXp(resolve) {
+    const { combatant, xp } = this.event
+    let amount = xp
+
+    const step = () => {
+      if (amount < 0) return resolve()
+      amount -= 1;
+      combatant.xp += 1;
+
+      if (combatant.xp === combatant.maxXp) {
+        combatant.xp = 0;
+        combatant.maxXp += 100
+        combatant.level += 1;
+      }
+
+      combatant.update()
+      requestAnimationFrame(step)
+      return
+    }
+    requestAnimationFrame(step)
+
+  }
+
   replacementMenu(resolve) {
     const menu = new ReplacementMenu({
       replacements: Object.values(this.battle.combatants)

@@ -1,7 +1,8 @@
 class TurnCycle {
-  constructor({ battle, onNewEvent }) {
+  constructor({ battle, onNewEvent, onWinner }) {
     this.battle = battle;
     this.onNewEvent = onNewEvent;
+    this.onWinner = onWinner;
     this.currentTeam = "player";
   }
 
@@ -34,6 +35,7 @@ class TurnCycle {
     }
 
     if (submission.instanceId) {
+      this.battle.usedInstanceIds[submission.instanceId] = true;
       this.battle.items = this.battle.items.filter(i => i.instanceId !== submission.instanceId)
     }
 
@@ -58,12 +60,30 @@ class TurnCycle {
       })
     }
 
+    if (targetDead && submission.target.team === "enemy") {
+      const playerActivePizzaId = this.battle.activeCombatants.player
+      const xp = submission.target.givesXp
+      const combatant = this.battle.combatants[playerActivePizzaId]
+
+      await this.onNewEvent({
+        type: "textMessage",
+        text: `${combatant.name} gained ${xp} experience!`
+      })
+
+      await this.onNewEvent({
+        type: "giveXp",
+        xp,
+        combatant
+      })
+    }
+
     const winner = this.getWinningTeam()
     if (winner) {
       await this.onNewEvent({
         type: "textMessage",
         text: `Winner`
       })
+      this.onWinner(winner)
       return
 
     }
@@ -130,10 +150,10 @@ class TurnCycle {
   }
 
   async init() {
-    // await this.onNewEvent({
-    //   type: "textMessage",
-    //   text: "The battle begins!"
-    // })
+    await this.onNewEvent({
+      type: "textMessage",
+      text: "The battle begins!"
+    })
 
     this.turn()
   }
