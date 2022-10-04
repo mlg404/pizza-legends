@@ -55,7 +55,8 @@ class OverworldMap {
         event: events[i]
       })
 
-      await eventHandler.init()
+      const result = await eventHandler.init()
+      if (result === "LOST_BATTLE") break
     }
 
 
@@ -87,9 +88,11 @@ class OverworldMap {
         object.y === nextCoords[1]
     })
 
-    if (!this.isCutscenePlaying && match && match.talking.length) {
-      this.startCutscene(match.talking[0].events)
-    }
+    if (this.isCutscenePlaying || !match || !match.talking.length) return
+    const relevantScenario = match.talking.find(
+      scenario => (scenario.required || []).every(flag => playerState.storyFlags[flag]))
+    relevantScenario && this.startCutscene(relevantScenario.events)
+
   }
 
   checkForFootstepCutscene() {
@@ -123,10 +126,18 @@ window.OverworldMaps = {
         ],
         talking: [
           {
+            required: ["TALKED_WITH_ERIO"],
+            events: [
+              { type: "textMessage", text: "MACHISTA!", faceHero: "npc1" },
+            ]
+          },
+          {
             events: [
               { type: "textMessage", text: "Hello!", faceHero: "npc1" },
               { type: "textMessage", text: "HELLOOOOOO!" },
               { type: "battle", enemyId: "beth" },
+              { type: "addStoryFlag", flag: "DEFEATED_BETH" },
+              { type: "textMessage", text: "You won... THIS TIME!" },
               // { type: "walk", direction: "up", who: "hero" },
             ]
           },
@@ -140,7 +151,8 @@ window.OverworldMaps = {
           {
             events: [
               { type: "textMessage", text: "HELLOOOOOO!", faceHero: "npcA" },
-              { type: "battle", enemyId: "erio" },
+              // { type: "battle", enemyId: "erio" },
+              { type: "addStoryFlag", flag: "TALKED_WITH_ERIO" },
             ]
           }
         ]
