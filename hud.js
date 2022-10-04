@@ -11,6 +11,10 @@ class Hud {
   }
 
   createElement() {
+    if (this.element) {
+      this.element.remove()
+      this.scoreboards = []
+    }
     this.element = document.createElement("div");
     this.element.classList.add("Hud")
 
@@ -31,11 +35,17 @@ class Hud {
 
   }
 
-  init(container) {
+  createAndAppend(container) {
     this.createElement()
     container.appendChild(this.element)
+  }
+
+  init(container) {
+    this.createAndAppend(container)
 
     document.addEventListener("PLayerStateUpdated", () => this.update())
+
+    document.addEventListener("LineupChanged", () => this.createAndAppend(container))
   }
 
 }

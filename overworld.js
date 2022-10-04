@@ -31,6 +31,7 @@ class Overworld {
 
       this.map.drawUpperImage(this.context, cameraPerson)
 
+      if (this.map.isPaused) return
       requestAnimationFrame(() => {
         step()
       })
@@ -42,6 +43,13 @@ class Overworld {
   bindActionInput() {
     new KeyPressListener("Enter", () => {
       this.map.checkForActionCutscene()
+    })
+    new KeyPressListener("Escape", () => {
+      if (this.map.isCutscenePlaying) return
+
+      this.map.startCutscene([
+        { type: "pause" }
+      ])
     })
   }
 
