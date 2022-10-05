@@ -1,98 +1,115 @@
-const utils = {
-  withGrid(n) {
-    return n * 16
-  },
-  asGridCoords(x, y) {
-    return [x * 16, y * 16].join(',')
-  },
-  nextPosition(initialX, initialY, direction) {
-    let x = initialX
-    let y = initialY
-    const size = 16
+export const withGrid = (n: number) => {
+  return n * 16;
+};
 
-    const moves = {
-      "left": [x - size, y],
-      "right": [x + size, y],
-      "up": [x, y - size],
-      "down": [x, y + size]
-    }
+export const asGridCoords = (x: number, y: number): string => {
+  return [x * 16, y * 16].join(",");
+};
 
-    return moves[direction]
-  },
+export enum DirectionsEnum {
+  LEFT = "left",
+  RIGHT = "right",
+  UP = "up",
+  DOWN = "down",
+}
 
-  linePath(start, end) {
-    const [startX, startY] = start
-    const [endX, endY] = end
-    const xDiff = endX - startX
-    const yDiff = endY - startY
-    const length = Math.max(xDiff, yDiff) + 1
-    const isVertical = xDiff > 0
+export const nextPosition = (
+  initialX: number,
+  initialY: number,
+  direction: DirectionsEnum
+) => {
+  const size = 16;
 
-    const elements = isVertical ? Array.from({ length }) : Array.from({ length })
+  const moves: { [key in DirectionsEnum]: [number, number] } = {
+    left: [initialX - size, initialY],
+    right: [initialX + size, initialY],
+    up: [initialX, initialY - size],
+    down: [initialX, initialY + size],
+  };
 
-    const lineCoords = {}
+  return moves[direction];
+};
 
-    elements.forEach((_, i) => {
-      lineCoords[utils.asGridCoords(
+export const linePath = (start: [number, number], end: [number, number]) => {
+  const [startX, startY] = start;
+  const [endX, endY] = end;
+  const xDiff = endX - startX;
+  const yDiff = endY - startY;
+  const length = Math.max(xDiff, yDiff) + 1;
+  const isVertical = xDiff > 0;
+
+  const elements = isVertical ? Array.from({ length }) : Array.from({ length });
+
+  const lineCoords = {};
+
+  elements.forEach((_, i) => {
+    lineCoords[
+      asGridCoords(
         isVertical ? startX + i : startX,
         isVertical ? startY : startY + i
-      )] = true
-    })
+      )
+    ] = true;
+  });
 
-    return lineCoords
-  },
+  return lineCoords;
+};
 
-  squarePath(start, end) {
-    const [startX, startY] = start
-    const [endX, endY] = end
-    const xDiff = endX - startX
-    const yDiff = endY - startY
+export const squarePath = (start: [number, number], end: [number, number]) => {
+  const [startX, startY] = start;
+  const [endX, endY] = end;
+  const xDiff = endX - startX;
+  const yDiff = endY - startY;
 
-    const elementsX = Array.from({ length: xDiff + 1 })
-    const elementsY = Array.from({ length: yDiff + 1 })
+  const elementsX = Array.from({ length: xDiff + 1 });
+  const elementsY = Array.from({ length: yDiff + 1 });
 
-    const squareCoords = {}
+  const squareCoords = {};
 
-    elementsX.forEach((_, ix) => {
-      elementsY.forEach((_, iy) => {
-        squareCoords[utils.asGridCoords(startX + ix, startY + iy)] = true
-      })
-    })
+  elementsX.forEach((_, ix) => {
+    elementsY.forEach((_, iy) => {
+      squareCoords[asGridCoords(startX + ix, startY + iy)] = true;
+    });
+  });
 
-    return squareCoords
-  },
+  return squareCoords;
+};
 
-  emitEvent(name, detail) {
-    const event = new CustomEvent(name, { detail })
-    document.dispatchEvent(event)
-  },
+export const emitEvent = (name: string, detail) => {
+  const event = new CustomEvent(name, { detail });
+  document.dispatchEvent(event);
+};
 
-  oppositeDirection(direction) {
-    const opposite = {
-      "left": "right",
-      "right": "left",
-      "up": "down",
-      "down": "up"
-    }
+export const oppositeDirection = (
+  direction: DirectionsEnum
+): DirectionsEnum => {
+  const opposite = {
+    [DirectionsEnum.LEFT]: DirectionsEnum.RIGHT,
+    [DirectionsEnum.RIGHT]: DirectionsEnum.LEFT,
+    [DirectionsEnum.UP]: DirectionsEnum.DOWN,
+    [DirectionsEnum.DOWN]: DirectionsEnum.UP,
+  };
 
-    return opposite[direction]
-  },
+  return opposite[direction];
+};
 
-  oppositeTeam(team) {
-    const opposite = {
-      "player": "enemy",
-      "enemy": "player"
-    }
-
-    return opposite[team]
-  },
-
-  wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  },
-
-  randomFromArray(array) {
-    return array[Math.floor(Math.random() * array.length)]
-  }
-
+export enum TeamEnum {
+  PLAYER = "player",
+  ENEMY = "enemy",
 }
+
+export const oppositeTeam = (team: TeamEnum): TeamEnum => {
+  const opposite = {
+    [TeamEnum.PLAYER]: TeamEnum.ENEMY,
+    [TeamEnum.ENEMY]: TeamEnum.PLAYER,
+  };
+
+  return opposite[team];
+};
+
+export const wait = (ms: number): Promise<number> => {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+};
+
+export const randomFromArray = (array: unknown[]) => {
+  return array[Math.floor(Math.random() * array.length)];
+};
