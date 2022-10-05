@@ -40,7 +40,7 @@ export const linePath = (start: [number, number], end: [number, number]) => {
 
   const elements = isVertical ? Array.from({ length }) : Array.from({ length });
 
-  const lineCoords = {};
+  const lineCoords: Record<string, boolean> = {};
 
   elements.forEach((_, i) => {
     lineCoords[
@@ -63,7 +63,7 @@ export const squarePath = (start: [number, number], end: [number, number]) => {
   const elementsX = Array.from({ length: xDiff + 1 });
   const elementsY = Array.from({ length: yDiff + 1 });
 
-  const squareCoords = {};
+  const squareCoords: Record<string, boolean> = {};
 
   elementsX.forEach((_, ix) => {
     elementsY.forEach((_, iy) => {
@@ -74,7 +74,7 @@ export const squarePath = (start: [number, number], end: [number, number]) => {
   return squareCoords;
 };
 
-export const emitEvent = (name: string, detail) => {
+export const emitEvent = (name: string, detail?: any) => {
   const event = new CustomEvent(name, { detail });
   document.dispatchEvent(event);
 };

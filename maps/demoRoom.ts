@@ -1,3 +1,4 @@
+import { Overworld } from "overworld";
 import {
   asGridCoords,
   DirectionsEnum,
@@ -8,6 +9,7 @@ import {
 import { ConfigObjectType, EventType, Map, MapsEnum } from "./interfaces";
 
 export const DemoRoom: Map = {
+  overworld: {} as Overworld,
   id: "DemoRoom",
   lowerSrc: "./images/maps/DemoLower.png",
   upperSrc: "./images/maps/DemoUpper.png",

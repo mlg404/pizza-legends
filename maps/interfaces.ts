@@ -1,3 +1,4 @@
+import { GameObject } from "gameObject";
 import { Overworld } from "../overworld";
 import { DirectionsEnum } from "../utils";
 
@@ -33,19 +34,7 @@ export interface Event {
   x?: number;
   y?: number;
   who?: string;
-}
-
-export interface StandEvent extends Event {
-  direction: DirectionsEnum;
-}
-
-export interface WalkEvent extends Event {
-  who: string;
-  direction: DirectionsEnum;
-}
-
-export interface BattleEvent extends Event {
-  enemyId: string;
+  pizzas?: any;
 }
 
 export interface ChangeMapEvent extends Event {
@@ -82,7 +71,7 @@ export interface Map {
   id: string;
   lowerSrc?: string;
   upperSrc?: string;
-  gameObjects: Record<string, ConfigObject>;
+  gameObjects: Record<string, GameObject>;
   configObjects?: Record<string, ConfigObject>;
   walls?: Record<string, boolean>;
   cutsceneSpaces?: Record<string, CutsceneSpaceEvents[]>;

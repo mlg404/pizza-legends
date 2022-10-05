@@ -1,14 +1,7 @@
+import { playerState } from "state/playerState";
 import { Battle } from "./battle/battle";
 import { Enemies } from "./content/enemies";
-import {
-  BattleEvent,
-  ChangeMapEvent,
-  Event,
-  Map,
-  MapsEnum,
-  StandEvent,
-  WalkEvent,
-} from "./maps/interfaces";
+import { Event, MapsEnum } from "./maps/interfaces";
 import { GameMaps } from "./maps/overworldMaps";
 import { Person } from "./person";
 import { SceneTransition } from "./sceneTransition";
@@ -16,19 +9,19 @@ import { TextMessage } from "./textMessage";
 import { oppositeDirection } from "./utils";
 
 interface OverworldEventProps {
-  map: Map;
+  map: any;
   event: Event;
 }
 export class OverworldEvent {
-  public map: Map;
+  public map: any;
   public event: Event;
   constructor({ map, event }: OverworldEventProps) {
     this.map = map;
     this.event = event;
   }
 
-  stand(resolve) {
-    const who: Person = this.map?.gameObjects?.[(this.event as StandEvent).who];
+  stand(resolve: any) {
+    const who: Person = this.map?.gameObjects?.[this.event!.who!];
     who.startBehavior(
       {
         map: this.map,
@@ -40,7 +33,7 @@ export class OverworldEvent {
       }
     );
 
-    const completeHandler = (e) => {
+    const completeHandler = (e: any) => {
       if (e.detail.whoId === this.event.who) {
         document.removeEventListener("PersonStandingComplete", completeHandler);
         resolve();
@@ -50,8 +43,8 @@ export class OverworldEvent {
     document.addEventListener("PersonStandingComplete", completeHandler);
   }
 
-  walk(resolve) {
-    const who = this.map?.gameObjects?.[(this.event as WalkEvent).who];
+  walk(resolve: any) {
+    const who = this.map?.gameObjects?.[this.event!.who!];
     who.startBehavior(
       {
         map: this.map,
@@ -63,7 +56,7 @@ export class OverworldEvent {
       }
     );
 
-    const completeHandler = (e) => {
+    const completeHandler = (e: any) => {
       if (e.detail.whoId === this.event.who) {
         document.removeEventListener("PersonWalkingComplete", completeHandler);
         resolve();
@@ -73,7 +66,7 @@ export class OverworldEvent {
     document.addEventListener("PersonWalkingComplete", completeHandler);
   }
 
-  textMessage(resolve) {
+  textMessage(resolve: any) {
     if (this.event.faceHero) {
       const obj = this.map.gameObjects[this.event.faceHero];
       obj.direction = oppositeDirection(this.map.gameObjects["hero"].direction);
@@ -87,9 +80,9 @@ export class OverworldEvent {
     message.init(document.querySelector(".game-container"));
   }
 
-  changeMap(resolve) {
+  changeMap(resolve: any) {
     Object.values(this.map.gameObjects).forEach(
-      (obj) => (obj.isMouted = false)
+      (obj: any) => (obj.isMounted = false)
     );
 
     const sceneTransition = new SceneTransition();
@@ -98,28 +91,28 @@ export class OverworldEvent {
         x: this.event.x,
         y: this.event.y,
         direction: this.event.direction,
-      } as ChangeMapEvent);
+      });
       resolve();
 
       sceneTransition.fadeOut();
     });
   }
 
-  battle(resolve) {
+  battle(resolve: any) {
     const battle = new Battle({
-      enemy: Enemies[(this.event as BattleEvent).enemyId],
-      onComplete: (playerWin) =>
+      enemy: Enemies[this.event!.enemyId!],
+      onComplete: (playerWin: string) =>
         resolve(playerWin ? "WON_BATTLE" : "LOST_BATTLE"),
     });
     battle.init(document.querySelector(".game-container"));
   }
 
-  addStoryFlag(resolve) {
-    window.playerState.storyFlags[this.event.flag] = true;
+  addStoryFlag(resolve: any) {
+    playerState.storyFlags[this.event!.flag!] = true;
     resolve();
   }
 
-  pause(resolve) {
+  pause(resolve: any) {
     this.map.isPaused = true;
     const menu = new PauseMenu({
       progress: this.map.overworld.progress,
@@ -133,7 +126,7 @@ export class OverworldEvent {
     menu.init(document.querySelector(".game-container"));
   }
 
-  craftingMenu(resolve) {
+  craftingMenu(resolve: any) {
     const menu = new CraftingMenu({
       pizzas: this.event.pizzas,
       onComplete: () => {
