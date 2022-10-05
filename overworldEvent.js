@@ -102,7 +102,8 @@ class OverworldEvent {
         resolve()
         this.map.isPaused = false
         this.map.overworld.startGameLoop()
-      }
+      },
+      hero: this.map.gameObjects["hero"]
     })
     menu.init(document.querySelector('.game-container'))
   }

@@ -8,12 +8,12 @@ class Progress {
 
   }
 
-  save() {
+  save(hero) {
     window.localStorage.setItem(this.saveFileKey, JSON.stringify({
       mapId: this.mapId,
-      startingHeroX: this.startingHeroX,
-      startingHeroY: this.startingHeroY,
-      startingHeroDirection: this.startingHeroDirection,
+      startingHeroX: hero.x,
+      startingHeroY: hero.y,
+      startingHeroDirection: hero.direction,
       playerState: {
         pizzas: playerState.pizzas,
         lineup: playerState.lineup,
