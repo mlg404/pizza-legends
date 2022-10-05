@@ -1,5 +1,15 @@
+import { GameMaps } from "./maps/overworldMaps";
+import { OverworldMap } from "./overworldMap";
+import { DirectionsEnum } from "./utils";
+
 interface OverworldProps {
   element: HTMLElement;
+}
+
+interface HeroInitialState {
+  x: number;
+  y: number;
+  direction: DirectionsEnum;
 }
 export class Overworld {
   public element: HTMLElement;
@@ -67,7 +77,7 @@ export class Overworld {
     });
   }
 
-  startMap(map, heroInitialState = null) {
+  startMap(map, heroInitialState: HeroInitialState | null = null) {
     this.map = new OverworldMap(map);
     this.map.overworld = this;
     this.map.mountObjects();
@@ -109,7 +119,7 @@ export class Overworld {
     this.hud = new Hud();
     this.hud.init(container);
 
-    this.startMap(window.OverworldMaps[this.progress.mapId], initialHeroState);
+    this.startMap(GameMaps[this.progress.mapId], initialHeroState);
 
     this.bindActionInput();
     this.bindHeroPositionCheck();

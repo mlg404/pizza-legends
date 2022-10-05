@@ -1,3 +1,4 @@
+import { Overworld } from "../overworld";
 import { DirectionsEnum } from "../utils";
 
 export enum MapsEnum {
@@ -20,7 +21,7 @@ export enum EventType {
   CHANGE_MAP = "changeMap",
 }
 
-interface Event {
+export interface Event {
   type: EventType;
   direction?: DirectionsEnum;
   time?: number;
@@ -28,45 +29,62 @@ interface Event {
   faceHero?: string;
   enemyId?: string;
   flag?: string;
+  map?: MapsEnum;
+  x?: number;
+  y?: number;
+  who?: string;
 }
 
-interface Talking {
+export interface StandEvent extends Event {
+  direction: DirectionsEnum;
+}
+
+export interface WalkEvent extends Event {
+  who: string;
+  direction: DirectionsEnum;
+}
+
+export interface BattleEvent extends Event {
+  enemyId: string;
+}
+
+export interface ChangeMapEvent extends Event {
+  map: MapsEnum;
+  x: number;
+  y: number;
+  direction: DirectionsEnum;
+}
+
+export interface Talking {
   required?: string[];
   events: Event[];
 }
 
-interface CutsceneEvent {
-  who?: string;
-  type: EventType;
-  direction?: DirectionsEnum;
-  text?: string;
-  map?: MapsEnum;
-  x?: number;
-  y?: number;
+export interface CutsceneSpaceEvents {
+  events: Event[];
 }
 
-interface CutsceneSpaceEvents {
-  events: CutsceneEvent[];
-}
-
-interface ConfigObject {
+export interface ConfigObject {
   type: ConfigObjectType;
   x: number;
   y: number;
+  direction?: DirectionsEnum;
   isPlayerControlled?: boolean;
   src?: string;
   behaviorLoop?: Event[];
   talking?: Talking[];
   storyFlag?: string;
   pizzas?: string[];
+  isMouted?: boolean;
 }
 
 export interface Map {
   id: string;
   lowerSrc?: string;
   upperSrc?: string;
-  gameObjects?: {};
+  gameObjects: Record<string, ConfigObject>;
   configObjects?: Record<string, ConfigObject>;
   walls?: Record<string, boolean>;
   cutsceneSpaces?: Record<string, CutsceneSpaceEvents[]>;
+  overworld: Overworld;
 }

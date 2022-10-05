@@ -1,30 +1,30 @@
-window.Enemies = {
-  "erio": {
+export const Enemies = {
+  erio: {
     name: "Erio",
     src: "./images/characters/people/erio.png",
     pizzas: {
-      "a": {
+      a: {
         pizzaId: "s001",
         maxHp: 50,
         level: 1,
       },
-      "b": {
+      b: {
         pizzaId: "s002",
         maxHp: 50,
         level: 1,
       },
-    }
+    },
   },
-  "beth": {
+  beth: {
     name: "Beth",
     src: "./images/characters/people/npc1.png",
     pizzas: {
-      "a": {
+      a: {
         pizzaId: "f001",
         hp: 1,
         maxHp: 50,
         level: 1,
-      }
-    }
-  }
-}
+      },
+    },
+  },
+};
