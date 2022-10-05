@@ -30,7 +30,19 @@ class GameObject {
 
   async doBehaviorEvent(map) {
 
-    if (map.isCutscenePlaying || this.behaviorLoop.length === 0) return
+    if (this.behaviorLoop.length === 0) {
+      return;
+    }
+
+    if (map.isCutscenePlaying) {
+      if (this.retryTimeout) {
+        clearTimeout(this.retryTimeout);
+      }
+      this.retryTimeout = setTimeout(() => {
+        this.doBehaviorEvent(map);
+      }, 1000)
+      return;
+    }
 
     let eventConfig = this.behaviorLoop[this.behavioLoopIndex]
     eventConfig.who = this.id
