@@ -6,6 +6,7 @@ export class Overworld {
   public canvas: HTMLCanvasElement;
   public context: CanvasRenderingContext2D;
   public map: any;
+
   constructor(config: OverworldProps) {
     this.element = config.element;
     this.canvas = this.element.querySelector(
@@ -15,7 +16,7 @@ export class Overworld {
     this.map = null;
   }
 
-  startGameLoop() {
+  startGameLoop(): void {
     const step = () => {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
