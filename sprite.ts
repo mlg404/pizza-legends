@@ -1,4 +1,17 @@
-class Sprite {
+import { withGrid } from "./utils";
+
+export class Sprite {
+  public image: HTMLImageElement;
+  public shadow: HTMLImageElement;
+  public useShadow: boolean;
+  public isLoaded: boolean;
+  public isShadowLoaded: boolean;
+  public animations;
+  public currentAnimation;
+  public currentAnimationFrame;
+  public animationFrameLimit;
+  public animationFrameProgress;
+  public gameObject;
   constructor(config) {
     this.image = new Image();
     this.image.src = config.src;
@@ -18,12 +31,32 @@ class Sprite {
       "idle-right": [[0, 1]],
       "idle-up": [[0, 2]],
       "idle-left": [[0, 3]],
-      "walk-down": [[1, 0], [0, 0], [3, 0], [0, 0],],
-      "walk-right": [[1, 1], [0, 1], [3, 1], [0, 1],],
-      "walk-up": [[1, 2], [0, 2], [3, 2], [0, 2],],
-      "walk-left": [[1, 3], [0, 3], [3, 3], [0, 3],]
-    }
-    this.currentAnimation = config.currentAnimation || "idle-down"
+      "walk-down": [
+        [1, 0],
+        [0, 0],
+        [3, 0],
+        [0, 0],
+      ],
+      "walk-right": [
+        [1, 1],
+        [0, 1],
+        [3, 1],
+        [0, 1],
+      ],
+      "walk-up": [
+        [1, 2],
+        [0, 2],
+        [3, 2],
+        [0, 2],
+      ],
+      "walk-left": [
+        [1, 3],
+        [0, 3],
+        [3, 3],
+        [0, 3],
+      ],
+    };
+    this.currentAnimation = config.currentAnimation || "idle-down";
     this.currentAnimationFrame = 0;
 
     this.animationFrameLimit = config.animationFrameLimit || 16;
@@ -59,8 +92,8 @@ class Sprite {
   }
 
   draw(context, cameraPerson) {
-    const x = this.gameObject.x - 8 + utils.withGrid(10.5) - cameraPerson.x;
-    const y = this.gameObject.y - 18 + utils.withGrid(6) - cameraPerson.y;
+    const x = this.gameObject.x - 8 + withGrid(10.5) - cameraPerson.x;
+    const y = this.gameObject.y - 18 + withGrid(6) - cameraPerson.y;
 
     this.isShadowLoaded && context.drawImage(this.shadow, x, y);
 
