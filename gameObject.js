@@ -18,7 +18,6 @@ class GameObject {
 
   mount(map) {
     this.isMounted = true
-    map.addWall([this.x, this.y])
 
     setTimeout(() => {
       this.doBehaviorEvent(map)
@@ -31,7 +30,7 @@ class GameObject {
 
   async doBehaviorEvent(map) {
 
-    if (map.isCutscenePlaying || this.behaviorLoop.length === 0 || this.isStanding) return
+    if (map.isCutscenePlaying || this.behaviorLoop.length === 0) return
 
     let eventConfig = this.behaviorLoop[this.behavioLoopIndex]
     eventConfig.who = this.id

@@ -1,7 +1,10 @@
 class OverworldMap {
   constructor(config) {
     this.overworld = null;
-    this.gameObjects = config.gameObjects || []
+    this.gameObjects = {}
+    this.configObjects = config.configObjects
+
+
     this.walls = config.walls || {}
     this.cutsceneSpaces = config.cutsceneSpaces || {}
 
@@ -33,16 +36,31 @@ class OverworldMap {
   }
 
   isSpaceTaken(currentX, currentY, direction) {
-    const nextPosition = utils.nextPosition(currentX, currentY, direction)
-    return this.walls[nextPosition.join(',')] || false
+    const [x, y] = utils.nextPosition(currentX, currentY, direction)
+    if (this.walls[[x, y].join(',')]) return true
+
+    return Object.values(this.gameObjects).find(obj => {
+      const [intentX, intentY] = obj.intentPosition || []
+      if (obj.x === x && obj.y === y) return true
+      if (intentX === x && intentY === y) return true
+      return false
+
+    })
   }
 
   mountObjects() {
-    Object.keys(this.gameObjects).forEach(key => {
-      let object = this.gameObjects[key]
+    const classes = {
+      "Person": Person,
+      "PizzaStone": PizzaStone,
+    }
+    Object.keys(this.configObjects).forEach(key => {
+      let object = this.configObjects[key]
       object.id = key
 
-      object.mount(this)
+      const instance = new classes[object.type](object)
+      this.gameObjects[key] = instance
+      this.gameObjects[key].id = key
+      instance.mount(this)
     })
   }
 
@@ -65,27 +83,12 @@ class OverworldMap {
     Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this))
   }
 
-  addWall(coordinates) {
-    this.walls[coordinates.join(',')] = true
-  }
-
-  removeWall(coordinates) {
-    delete this.walls[coordinates.join(',')]
-  }
-
-  moveWall(initialCoordinates, direction) {
-    this.removeWall(initialCoordinates)
-    const nextPosition = utils.nextPosition(initialCoordinates[0], initialCoordinates[1], direction)
-    this.addWall(nextPosition)
-  }
-
   checkForActionCutscene() {
     const hero = this.gameObjects["hero"]
 
-    const nextCoords = utils.nextPosition(hero.x, hero.y, hero.direction)
+    const [x, y] = utils.nextPosition(hero.x, hero.y, hero.direction)
     const match = Object.values(this.gameObjects).find(object => {
-      return object.x === nextCoords[0] &&
-        object.y === nextCoords[1]
+      return object.x === x && object.y === y
     })
 
     if (this.isCutscenePlaying || !match || !match.talking.length) return
@@ -109,13 +112,16 @@ window.OverworldMaps = {
     id: "DemoRoom",
     lowerSrc: './images/maps/DemoLower.png',
     upperSrc: './images/maps/DemoUpper.png',
-    gameObjects: {
-      hero: new Person({
+    gameObjects: {},
+    configObjects: {
+      hero: {
+        type: "Person",
         x: utils.withGrid(5),
         y: utils.withGrid(5),
         isPlayerControlled: true,
-      }),
-      npc1: new Person({
+      },
+      npc1: {
+        type: "Person",
         x: utils.withGrid(7),
         y: utils.withGrid(9),
         src: './images/characters/people/npc1.png',
@@ -143,8 +149,9 @@ window.OverworldMaps = {
             ]
           },
         ]
-      }),
-      npcA: new Person({
+      },
+      npcA: {
+        type: "Person",
         x: utils.withGrid(8),
         y: utils.withGrid(5),
         src: './images/characters/people/erio.png',
@@ -157,13 +164,49 @@ window.OverworldMaps = {
             ]
           }
         ]
-      }),
-      pizzaStone: new PizzaStone({
+      },
+      pizzaStone: {
+        type: "PizzaStone",
         x: utils.withGrid(2),
         y: utils.withGrid(7),
         storyFlag: "USED_PIZZA_STONE",
         pizzas: ["v001", "f001"]
-      })
+      },
+      npc3: {
+        type: "Person",
+        x: utils.withGrid(5),
+        y: utils.withGrid(6),
+        src: './images/characters/people/npc5.png',
+        behaviorLoop: [
+          { type: 'walk', direction: 'right' },
+          { type: 'walk', direction: 'down' },
+          { type: 'walk', direction: 'down' },
+          { type: 'walk', direction: 'left' },
+          { type: 'walk', direction: 'left' },
+          { type: 'walk', direction: 'up' },
+          { type: 'walk', direction: 'up' },
+          { type: 'walk', direction: 'right' },
+          { type: 'stand', direction: 'up', time: 800 }
+        ],
+        talking: [
+          {
+            required: ["TALKED_WITH_ERIO"],
+            events: [
+              { type: "textMessage", text: "MACHISTA!", faceHero: "npc1" },
+            ]
+          },
+          {
+            events: [
+              { type: "textMessage", text: "Hello!", faceHero: "npc1" },
+              { type: "textMessage", text: "HELLOOOOOO!" },
+              { type: "battle", enemyId: "beth" },
+              { type: "addStoryFlag", flag: "DEFEATED_BETH" },
+              { type: "textMessage", text: "You won... THIS TIME!" },
+              // { type: "walk", direction: "up", who: "hero" },
+            ]
+          },
+        ]
+      },
     },
     walls: {
       // Table
@@ -218,22 +261,25 @@ window.OverworldMaps = {
     id: "Kitchen",
     lowerSrc: './images/maps/KitchenLower.png',
     upperSrc: './images/maps/KitchenUpper.png',
-    gameObjects: {
-      hero: new Person({
+    configObjects: {
+      hero: {
+        type: "Person",
         isPlayerControlled: true,
         x: utils.withGrid(5),
         y: utils.withGrid(5),
-      }),
-      npcA: new Person({
+      },
+      npcA: {
+        type: "Person",
         x: utils.withGrid(9),
         y: utils.withGrid(6),
         src: './images/characters/people/npc2.png',
-      }),
-      npcB: new Person({
+      },
+      npcB: {
+        type: "Person",
         x: utils.withGrid(10),
         y: utils.withGrid(8),
         src: './images/characters/people/npc3.png',
-      })
+      }
     },
     cutsceneSpaces: {
       [utils.asGridCoords(5, 10)]: [
@@ -255,12 +301,13 @@ window.OverworldMaps = {
     id: "Street",
     lowerSrc: './images/maps/StreetLower.png',
     upperSrc: './images/maps/StreetUpper.png',
-    gameObjects: {
-      hero: new Person({
+    configObjects: {
+      hero: {
+        type: "Person",
         x: utils.withGrid(30),
         y: utils.withGrid(10),
         isPlayerControlled: true,
-      }),
+      },
     },
     cutsceneSpaces: {
       [utils.asGridCoords(29, 9)]: [
