@@ -1,0 +1,15 @@
+{
+  "name": "pizza-legends",
+  "version": "1.0.0",
+  "description": "A refactor in typescript of Dre's Pizza Legends",
+  "main": "index.ts",
+  "repository": "git@github.com:mlg404/pizza-legends.git",
+  "author": "Victor Eyer <eyervictor@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  }
+}
