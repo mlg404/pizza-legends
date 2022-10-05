@@ -1,64 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link type="text/css" rel="stylesheet" href="./styles/global.css">
-  <link type="text/css" rel="stylesheet" href="./styles/textMessage.css">
-  <link type="text/css" rel="stylesheet" href="./styles/sceneTransition.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
 
-  <link type="text/css" rel="stylesheet" href="./styles/battle.css">
-  <link type="text/css" rel="stylesheet" href="./styles/combatant.css">
-  <link type="text/css" rel="stylesheet" href="./styles/submissionMenu.css">
-  <link type="text/css" rel="stylesheet" href="./styles/team.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <link type="text/css" rel="stylesheet" href="./styles/keyboardMenu.css">
-  <link type="text/css" rel="stylesheet" href="./styles/hud.css">
-  <link type="text/css" rel="stylesheet" href="./styles/menus.css">
-</head>
-<body>
-  <div class="game-container">
-    <canvas class="game-canvas" width="352" height="198"></canvas>
-  </div>
+    <link type="text/css" rel="stylesheet" href="./styles/global.css" />
+    <link type="text/css" rel="stylesheet" href="./styles/textMessage.css" />
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="./styles/sceneTransition.css"
+    />
 
-  <script src="./content/pizzas.js"></script>
-  <script src="./content/actions.js"></script>
-  <script src="./content/enemies.js"></script>
-  
-  <script src="./state/playerState.js"></script>
+    <link type="text/css" rel="stylesheet" href="./styles/battle.css" />
+    <link type="text/css" rel="stylesheet" href="./styles/combatant.css" />
+    <link type="text/css" rel="stylesheet" href="./styles/submissionMenu.css" />
+    <link type="text/css" rel="stylesheet" href="./styles/team.css" />
 
-  <script src="./utils.js"></script>
-  <script src="./directionInput.js"></script>
-  <script src="./hud.js"></script>
-  <script src="./pauseMenu.js"></script>
-  <script src="./craftingMenu.js"></script>
-  <script src="./overworld.js"></script>
-  <script src="./gameObject.js"></script>
-  <script src="./person.js"></script>
-  <script src="./pizzaStone.js"></script>
-  <script src="./sprite.js"></script>
-  <script src="./overworldMap.js"></script>
-  <script src="./overworldEvent.js"></script>
-  <script src="./textMessage.js"></script>
-  <script src="./keyPressListener.js"></script>
-  <script src="./revealingText.js"></script>
-  <script src="./sceneTransition.js"></script>
-  <script src="./keyboardMenu.js"></script>
-  <script src="./progress.js"></script>
+    <link type="text/css" rel="stylesheet" href="./styles/keyboardMenu.css" />
+    <link type="text/css" rel="stylesheet" href="./styles/hud.css" />
+    <link type="text/css" rel="stylesheet" href="./styles/menus.css" />
 
+    <link type="text/css" rel="stylesheet" href="./styles/titleScreen.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <canvas class="game-canvas" width="352" height="198"></canvas>
+    </div>
 
-  <script src="./battle/battle.js"></script>
-  <script src="./battle/combatant.js"></script>
-  <script src="./battle/submissionMenu.js"></script>
-  <script src="./battle/replacementMenu.js"></script>
-  <script src="./battle/team.js"></script>
-  <script src="./battle/battleEvent.js"></script>
-  <script src="./battle/turnCycle.js"></script>
-  <script src="./battle/battleAnimations.js"></script>
+    <script src="./titleScreen.js"></script>
 
-  <script src="./init.js"></script>
+    <script src="./content/pizzas.js"></script>
+    <script src="./content/actions.js"></script>
+    <script src="./content/enemies.js"></script>
 
-</body>
+    <script src="./state/playerState.js"></script>
+
+    <script src="./utils.js"></script>
+    <script src="./directionInput.js"></script>
+    <script src="./hud.js"></script>
+    <script src="./pauseMenu.js"></script>
+    <script src="./craftingMenu.js"></script>
+    <script src="./overworld.js"></script>
+    <script src="./gameObject.js"></script>
+    <script src="./person.js"></script>
+    <script src="./pizzaStone.js"></script>
+    <script src="./sprite.js"></script>
+    <script src="./overworldMap.js"></script>
+    <script src="./overworldEvent.js"></script>
+    <script src="./textMessage.js"></script>
+    <script src="./keyPressListener.js"></script>
+    <script src="./revealingText.js"></script>
+    <script src="./sceneTransition.js"></script>
+    <script src="./keyboardMenu.js"></script>
+    <script src="./progress.js"></script>
+
+    <script src="./battle/battle.js"></script>
+    <script src="./battle/combatant.js"></script>
+    <script src="./battle/submissionMenu.js"></script>
+    <script src="./battle/replacementMenu.js"></script>
+    <script src="./battle/team.js"></script>
+    <script src="./battle/battleEvent.js"></script>
+    <script src="./battle/turnCycle.js"></script>
+    <script src="./battle/battleAnimations.js"></script>
+
+    <script src="./init.js"></script>
+  </body>
 </html>
