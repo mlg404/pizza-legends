@@ -1,7 +1,13 @@
+import { Pizza } from "content/pizzas";
 import { GameObject } from "gameObject";
+import { EventType } from "maps/interfaces";
+import { Sprite } from "sprite";
+import { playerState } from "state/playerState";
 
 export class PizzaStone extends GameObject {
-  constructor(config) {
+  public storyFlag: string;
+  public pizzas: Pizza[];
+  constructor(config: any) {
     super(config);
     this.sprite = new Sprite({
       gameObject: this,
@@ -18,13 +24,15 @@ export class PizzaStone extends GameObject {
     this.talking = [
       {
         required: [this.storyFlag],
-        events: [{ type: "textMessage", text: "You already used this." }],
+        events: [
+          { type: EventType.TEXT_MESSAGE, text: "You already used this." },
+        ],
       },
       {
         events: [
-          { type: "textMessage", text: "ME USA" },
-          { type: "craftingMenu", pizzas: this.pizzas },
-          { type: "addStoryFlag", flag: this.storyFlag },
+          { type: EventType.TEXT_MESSAGE, text: "ME USA" },
+          { type: EventType.CRAFTING_MENU, pizzas: this.pizzas },
+          { type: EventType.ADD_STORY_FLAG, flag: this.storyFlag },
         ],
       },
     ];

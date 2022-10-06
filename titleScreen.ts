@@ -1,9 +1,20 @@
+import { Progress } from "progress";
+
+interface TitleScreenProps {
+  progress: Progress;
+}
 export class TitleScreen {
-  constructor({ progress }) {
+  public progress: Progress;
+  public element: HTMLDivElement;
+  public keyboardMenu: KeyboardMenu;
+
+  constructor({ progress }: TitleScreenProps) {
     this.progress = progress;
+    this.element = {} as HTMLDivElement;
+    this.keyboardMenu = new KeyboardMenu();
   }
 
-  getOptions(resolve) {
+  getOptions(resolve: any) {
     const saveFile = this.progress.getSaveFile();
     return [
       {
@@ -40,11 +51,10 @@ export class TitleScreen {
     this.element.remove();
   }
 
-  init(container) {
+  init(container: HTMLDivElement) {
     return new Promise((resolve) => {
       this.createElement();
       container.appendChild(this.element);
-      this.keyboardMenu = new KeyboardMenu();
       this.keyboardMenu.init(this.element);
       this.keyboardMenu.setOptions(this.getOptions(resolve));
     });

@@ -22,6 +22,7 @@ export enum EventType {
   STAND = "stand",
   CHANGE_MAP = "changeMap",
   PAUSE = "pause",
+  CRAFTING_MENU = "craftingMenu",
 }
 
 export interface Event {

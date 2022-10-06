@@ -1,3 +1,4 @@
+import { Person } from "person";
 import { withGrid } from "./utils";
 
 export class Sprite {
@@ -12,7 +13,9 @@ export class Sprite {
   public animationFrameLimit;
   public animationFrameProgress;
   public gameObject;
-  constructor(config) {
+  constructor(config: any) {
+    this.isLoaded = false;
+    this.isShadowLoaded = false;
     this.image = new Image();
     this.image.src = config.src;
     this.image.onload = () => {
@@ -69,7 +72,7 @@ export class Sprite {
     return this.animations[this.currentAnimation][this.currentAnimationFrame];
   }
 
-  setAnimation(key) {
+  setAnimation(key: string) {
     if (this.currentAnimation !== key) {
       this.currentAnimation = key;
       this.currentAnimationFrame = 0;
@@ -91,7 +94,7 @@ export class Sprite {
     }
   }
 
-  draw(context, cameraPerson) {
+  draw(context: CanvasRenderingContext2D, cameraPerson: Person) {
     const x = this.gameObject.x - 8 + withGrid(10.5) - cameraPerson.x;
     const y = this.gameObject.y - 18 + withGrid(6) - cameraPerson.y;
 
