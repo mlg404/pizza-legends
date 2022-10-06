@@ -1,19 +1,31 @@
+import { Event, Talking } from "maps/interfaces";
+import { OverworldEvent } from "overworldEvent";
+import { OverworldMap } from "overworldMap";
 import { Sprite } from "./sprite";
 import { DirectionsEnum } from "./utils";
 
+interface GameObjectConfig {
+  x: number;
+  y: number;
+  direction: DirectionsEnum;
+  src: string;
+  behaviorLoop: Event[];
+  talking: Talking[];
+}
+
 export class GameObject {
-  public id;
+  public id: string | null;
   public isMounted: boolean;
   public x: number;
   public y: number;
   public direction: DirectionsEnum;
   public sprite;
-  public behaviorLoop;
+  public behaviorLoop: Event[];
   public behavioLoopIndex;
   public talking;
   public retryTimeout: number | null;
 
-  constructor(config) {
+  constructor(config: GameObjectConfig) {
     this.id = null;
     this.isMounted = false;
     this.x = config.x || 0;
@@ -23,6 +35,7 @@ export class GameObject {
       gameObject: this,
       src: config.src || "./images/characters/people/hero.png",
     });
+    this.retryTimeout = null;
 
     this.behaviorLoop = config.behaviorLoop || [];
     this.behavioLoopIndex = 0;
@@ -30,7 +43,7 @@ export class GameObject {
     this.talking = config.talking || [];
   }
 
-  mount(map) {
+  mount(map: OverworldMap) {
     this.isMounted = true;
 
     window.setTimeout(() => {
@@ -40,7 +53,7 @@ export class GameObject {
 
   update() {}
 
-  async doBehaviorEvent(map) {
+  async doBehaviorEvent(map: OverworldMap) {
     if (this.behaviorLoop.length === 0) {
       return;
     }
@@ -56,7 +69,7 @@ export class GameObject {
     }
 
     let eventConfig = this.behaviorLoop[this.behavioLoopIndex];
-    eventConfig.who = this.id;
+    eventConfig.who = this.id!;
 
     const eventHandler = new OverworldEvent({ map, event: eventConfig });
     await eventHandler.init();

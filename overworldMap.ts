@@ -1,11 +1,15 @@
+import { ConfigObject, Event, Map } from "maps/interfaces";
+import { Person } from "person";
+import { PizzaStone } from "pizzaStone";
+import { playerState } from "state/playerState";
 import { Overworld } from "./overworld";
 import { OverworldEvent } from "./overworldEvent";
-import { nextPosition, withGrid } from "./utils";
+import { DirectionsEnum, nextPosition, withGrid } from "./utils";
 
 export class OverworldMap {
   public overworld: Overworld | null;
-  public gameObjects;
-  public configObjects;
+  public gameObjects: Record<string, Person | PizzaStone>;
+  public configObjects: Record<string, ConfigObject>;
 
   public walls;
   public cutsceneSpaces;
@@ -15,26 +19,26 @@ export class OverworldMap {
   public isCutscenePlaying: boolean;
   public isPaused: boolean;
 
-  constructor(config) {
+  constructor(config: Map) {
     this.overworld = null;
     this.gameObjects = {};
-    this.configObjects = config.configObjects;
+    this.configObjects = config.configObjects!;
 
     this.walls = config.walls || {};
     this.cutsceneSpaces = config.cutsceneSpaces || {};
 
     this.lowerImage = new Image();
-    this.lowerImage.src = config.lowerSrc;
+    this.lowerImage.src = config.lowerSrc!;
 
     this.upperImage = new Image();
-    this.upperImage.src = config.upperSrc;
+    this.upperImage.src = config.upperSrc!;
 
     this.isCutscenePlaying = false;
 
     this.isPaused = false;
   }
 
-  drawLowerImage(context, cameraPerson) {
+  drawLowerImage(context: CanvasRenderingContext2D, cameraPerson: Person) {
     context.drawImage(
       this.lowerImage,
       withGrid(10.5) - cameraPerson.x,
@@ -42,7 +46,7 @@ export class OverworldMap {
     );
   }
 
-  drawUpperImage(context, cameraPerson) {
+  drawUpperImage(context: CanvasRenderingContext2D, cameraPerson: Person) {
     context.drawImage(
       this.upperImage,
       withGrid(10.5) - cameraPerson.x,
@@ -50,12 +54,12 @@ export class OverworldMap {
     );
   }
 
-  isSpaceTaken(currentX, currentY, direction) {
+  isSpaceTaken(currentX: number, currentY: number, direction: DirectionsEnum) {
     const [x, y] = nextPosition(currentX, currentY, direction);
     if (this.walls[[x, y].join(",")]) return true;
 
     return Object.values(this.gameObjects).find((obj) => {
-      const [intentX, intentY] = obj.intentPosition || [];
+      const [intentX, intentY] = (obj as Person).intentPosition || [];
       if (obj.x === x && obj.y === y) return true;
       if (intentX === x && intentY === y) return true;
       return false;
@@ -78,7 +82,7 @@ export class OverworldMap {
     });
   }
 
-  async startCutscene(events) {
+  async startCutscene(events: Event[]) {
     this.isCutscenePlaying = true;
 
     for (let i = 0; i < events.length; i++) {

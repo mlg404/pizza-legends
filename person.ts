@@ -1,6 +1,12 @@
 import { GameObject } from "./gameObject";
 
 export class Person extends GameObject {
+  public movingProgressRemaining;
+  public isStanding;
+  public intentPosition: [number, number] | null;
+  public isPlayerControlled;
+  public directionUpdate;
+
   constructor(config) {
     super(config);
     this.movingProgressRemaining = 0;

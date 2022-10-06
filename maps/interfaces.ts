@@ -1,4 +1,5 @@
-import { GameObject } from "gameObject";
+import { Person } from "person";
+import { PizzaStone } from "pizzaStone";
 import { Overworld } from "../overworld";
 import { DirectionsEnum } from "../utils";
 
@@ -65,13 +66,14 @@ export interface ConfigObject {
   storyFlag?: string;
   pizzas?: string[];
   isMouted?: boolean;
+  id?: string;
 }
 
 export interface Map {
   id: string;
   lowerSrc?: string;
   upperSrc?: string;
-  gameObjects: Record<string, GameObject>;
+  gameObjects: Record<string, Person | PizzaStone>;
   configObjects?: Record<string, ConfigObject>;
   walls?: Record<string, boolean>;
   cutsceneSpaces?: Record<string, CutsceneSpaceEvents[]>;

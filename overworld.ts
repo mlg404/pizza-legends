@@ -1,3 +1,5 @@
+import { Map } from "maps/interfaces";
+import { Progress } from "progress";
 import { GameMaps } from "./maps/overworldMaps";
 import { OverworldMap } from "./overworldMap";
 import { DirectionsEnum } from "./utils";
@@ -15,15 +17,15 @@ export class Overworld {
   public element: HTMLElement;
   public canvas: HTMLCanvasElement;
   public context: CanvasRenderingContext2D;
-  public map: any;
+  public map: OverworldMap;
 
   constructor(config: OverworldProps) {
+    this.map = {} as OverworldMap;
     this.element = config.element;
     this.canvas = this.element.querySelector(
       ".game-canvas"
     ) as HTMLCanvasElement;
     this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-    this.map = null;
   }
 
   startGameLoop(): void {
@@ -77,7 +79,7 @@ export class Overworld {
     });
   }
 
-  startMap(map, heroInitialState: HeroInitialState | null = null) {
+  startMap(map: Map, heroInitialState: HeroInitialState | null = null) {
     this.map = new OverworldMap(map);
     this.map.overworld = this;
     this.map.mountObjects();
