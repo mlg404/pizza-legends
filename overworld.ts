@@ -1,5 +1,9 @@
-import { Map } from "maps/interfaces";
+import { DirectionInput } from "directionInput";
+import { Hud } from "hud";
+import { EventType, Map } from "maps/interfaces";
+import { Person } from "person";
 import { Progress } from "progress";
+import { TitleScreen } from "titleScreen";
 import { GameMaps } from "./maps/overworldMaps";
 import { OverworldMap } from "./overworldMap";
 import { DirectionsEnum } from "./utils";
@@ -18,6 +22,10 @@ export class Overworld {
   public canvas: HTMLCanvasElement;
   public context: CanvasRenderingContext2D;
   public map: OverworldMap;
+  public directionInput: DirectionInput;
+  public progress: Progress;
+  public titleScreen: TitleScreen;
+  public hud: Hud;
 
   constructor(config: OverworldProps) {
     this.map = {} as OverworldMap;
@@ -26,13 +34,18 @@ export class Overworld {
       ".game-canvas"
     ) as HTMLCanvasElement;
     this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+
+    this.directionInput = new DirectionInput();
+    this.progress = new Progress();
+    this.titleScreen = {} as TitleScreen;
+    this.hud = new Hud();
   }
 
   startGameLoop(): void {
     const step = () => {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-      const cameraPerson = this.map.gameObjects.hero;
+      const cameraPerson = this.map.gameObjects.hero as Person;
 
       Object.values(this.map.gameObjects).forEach((object) => {
         object.update({
@@ -67,12 +80,12 @@ export class Overworld {
     new KeyPressListener("Escape", () => {
       if (this.map.isCutscenePlaying) return;
 
-      this.map.startCutscene([{ type: "pause" }]);
+      this.map.startCutscene([{ type: EventType.PAUSE }]);
     });
   }
 
   bindHeroPositionCheck() {
-    document.addEventListener("PersonWalkingComplete", (e) => {
+    document.addEventListener("PersonWalkingComplete", (e: any) => {
       if (e.detail.whoId === "hero") {
         this.map.checkForFootstepCutscene();
       }
@@ -98,9 +111,9 @@ export class Overworld {
   }
 
   async init() {
-    const container = document.querySelector(".game-container");
-
-    this.progress = new Progress();
+    const container = document.querySelector(
+      ".game-container"
+    ) as HTMLDivElement;
 
     this.titleScreen = new TitleScreen({
       progress: this.progress,
@@ -118,7 +131,6 @@ export class Overworld {
       };
     }
 
-    this.hud = new Hud();
     this.hud.init(container);
 
     this.startMap(GameMaps[this.progress.mapId], initialHeroState);
@@ -126,7 +138,6 @@ export class Overworld {
     this.bindActionInput();
     this.bindHeroPositionCheck();
 
-    this.directionInput = new DirectionInput();
     this.directionInput.init();
     this.startGameLoop();
 

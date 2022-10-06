@@ -1,33 +1,69 @@
-class Combatant {
-  constructor(config, battle) {
-    Object.keys(config).forEach(key => this[key] = config[key])
-    this.hp = this.hp ? this.hp : this.maxHp
-    this.battle = battle
+import { PizzaStatus, PizzaTypes } from "content/pizzas";
+import { randomFromArray } from "utils";
+
+export class Combatant {
+  public hudElement: HTMLDivElement;
+  public hp: number;
+  public maxHp: number;
+  public battle;
+  public xp: number;
+  public maxXp: number;
+  public team: string;
+  public level: number;
+  public id: string;
+  public name: string;
+  public src: string;
+  public icon: string;
+  public type: PizzaTypes;
+  public pizzaElement: HTMLImageElement;
+  public hpFills: NodeListOf<HTMLCanvasElement>;
+  public xpFills: NodeListOf<HTMLCanvasElement>;
+  public status: PizzaStatus | null;
+
+  constructor(config: any, battle: any) {
+    this.id = config.id;
+    this.name = config.name;
+    this.src = config.src;
+    this.icon = config.icon;
+    this.type = config.type;
+    this.maxHp = config.maxHp;
+    this.xp = config.xp;
+    this.maxXp = config.maxXp;
+    this.team = config.team;
+    this.level = config.level;
+    this.team = config.team;
+    this.hp = config.hp ? config.hp : config.maxHp;
+    this.battle = battle;
+    this.hudElement = {} as HTMLDivElement;
+    this.pizzaElement = {} as HTMLImageElement;
+    this.hpFills = {} as NodeListOf<HTMLCanvasElement>;
+    this.xpFills = {} as NodeListOf<HTMLCanvasElement>;
+    this.status = config.status;
   }
 
   get hpPercent() {
-    const percent = this.hp / this.maxHp * 100
-    return percent > 0 ? percent : 0
+    const percent = (this.hp / this.maxHp) * 100;
+    return percent > 0 ? percent : 0;
   }
 
   get xpPercent() {
-    return this.xp / this.maxXp * 100
+    return (this.xp / this.maxXp) * 100;
   }
 
   get isActive() {
-    return this.battle?.activeCombatants[this.team] === this.id
+    return this.battle?.activeCombatants[this.team] === this.id;
   }
 
   get givesXp() {
-    return this.level * 20
+    return this.level * 20;
   }
 
   createElement() {
-    this.hudElement = document.createElement("div")
-    this.hudElement.classList.add("Combatant")
-    this.hudElement.setAttribute("data-combatant", this.id)
-    this.hudElement.setAttribute("data-team", this.team)
-    this.hudElement.innerHTML = (`
+    this.hudElement = document.createElement("div");
+    this.hudElement.classList.add("Combatant");
+    this.hudElement.setAttribute("data-combatant", this.id);
+    this.hudElement.setAttribute("data-team", this.team);
+    this.hudElement.innerHTML = `
       <p class="Combatant_name">${this.name}</p>
       <p class="Combatant_level"></p>
       <div class="Combatant_character_crop">
@@ -43,7 +79,7 @@ class Combatant {
         <rect x=0 y=1 width="0%" height=1 fill="#ffc934" />
       </svg>
       <p class="Combatant_status"></p>
-    `)
+    `;
 
     this.pizzaElement = document.createElement("img");
     this.pizzaElement.classList.add("Pizza");
@@ -51,75 +87,81 @@ class Combatant {
     this.pizzaElement.setAttribute("alt", this.name);
     this.pizzaElement.setAttribute("data-team", this.team);
 
-    this.hpFills = this.hudElement.querySelectorAll(".Combatant_life-container > rect")
-    this.xpFills = this.hudElement.querySelectorAll(".Combatant_xp-container > rect")
+    this.hpFills = this.hudElement.querySelectorAll(
+      ".Combatant_life-container > rect"
+    );
+    this.xpFills = this.hudElement.querySelectorAll(
+      ".Combatant_xp-container > rect"
+    );
   }
 
   update(changes = {}) {
-    Object.keys(changes).forEach(key => {
-      this[key] = changes[key]
-    })
+    Object.keys(changes).forEach((key) => {
+      // @ts-ignore
+      this[key] = changes[key];
+    });
 
-    this.hudElement.setAttribute("data-active", this.isActive);
-    this.pizzaElement.setAttribute("data-active", this.isActive)
+    this.hudElement.setAttribute("data-active", `${this.isActive}`);
+    this.pizzaElement.setAttribute("data-active", `${this.isActive}`);
 
-    this.hpFills.forEach(rect => rect.style.width = `${this.hpPercent}%`)
-    this.xpFills.forEach(rect => rect.style.width = `${this.xpPercent}%`)
+    this.hpFills.forEach((rect) => (rect.style.width = `${this.hpPercent}%`));
+    this.xpFills.forEach((rect) => (rect.style.width = `${this.xpPercent}%`));
 
-    this.hudElement.querySelector(".Combatant_level").innerText = this.level
+    this.hudElement.querySelector(
+      ".Combatant_level"
+    )!.innerHTML = `${this.level}`;
 
-    const statusElement = this.hudElement.querySelector(".Combatant_status")
+    const statusElement = this.hudElement.querySelector(
+      ".Combatant_status"
+    ) as HTMLDivElement;
     if (this.status) {
-      statusElement.innerText = this.status.type
-      statusElement.style.display = "block"
+      statusElement.innerHTML = this.status.type;
+      statusElement.style.display = "block";
     } else {
       statusElement.innerText = "";
-      statusElement.style.display = "none"
+      statusElement.style.display = "none";
     }
-
   }
 
-  getReplacedEvents(originalEvents) {
-
-    if (this.status?.type === "clumsy" && utils.randomFromArray([true, false, false])) {
-      return [
-        { type: "textMessage", text: `${this.name} flops over!` },
-      ]
+  getReplacedEvents(originalEvents: any) {
+    if (
+      this.status?.type === "clumsy" &&
+      randomFromArray([true, false, false])
+    ) {
+      return [{ type: "textMessage", text: `${this.name} flops over!` }];
     }
 
-    return originalEvents
-
+    return originalEvents;
   }
 
   getPostEvents() {
     if (this.status?.type === "saucy") {
       return [
         { type: "textMessage", text: "Feelin' saucy!" },
-        { type: "stateChange", recover: 5, onCaster: true }
-      ]
+        { type: "stateChange", recover: 5, onCaster: true },
+      ];
     }
 
-    return []
+    return [];
   }
 
   decrementStatus() {
-    if (!this.status) return null
+    if (!this.status) return null;
 
     this.status.expiresIn -= 1;
 
     if (this.status.expiresIn <= 0) {
-      this.update({ status: null })
-      return { type: "textMessage", text: "Status Expired" }
+      this.update({ status: null });
+      return { type: "textMessage", text: "Status Expired" };
     }
 
-    return null
+    return null;
   }
 
-
-  init(container) {
-    this.createElement()
-    container.appendChild(this.hudElement)
-    container.appendChild(this.pizzaElement)
-    this.update()
+  init(container: HTMLDivElement) {
+    this.createElement();
+    container.appendChild(this.hudElement);
+    container.appendChild(this.pizzaElement);
+    this.update();
   }
 }

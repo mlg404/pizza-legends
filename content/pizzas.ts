@@ -6,13 +6,18 @@ export enum PizzaTypes {
   CHILL = "chill",
 }
 
-interface Pizza {
+export interface PizzaStatus {
+  type: "saucy" | "clumsy";
+  expiresIn: number;
+}
+export interface Pizza {
   name: string;
   type: PizzaTypes;
   description: string;
   src: string;
   icon: string;
   actions: string[];
+  status?: PizzaStatus;
 }
 
 export const Pizzas: Record<string, Pizza> = {

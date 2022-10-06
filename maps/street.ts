@@ -1,8 +1,9 @@
+import { Overworld } from "overworld";
 import { asGridCoords, DirectionsEnum, withGrid } from "../utils";
 import { ConfigObjectType, EventType, Map, MapsEnum } from "./interfaces";
 
 export const Street: Map = {
-  id: "Street",
+  id: MapsEnum.STREET,
   lowerSrc: "./images/maps/StreetLower.png",
   upperSrc: "./images/maps/StreetUpper.png",
   configObjects: {
@@ -28,4 +29,7 @@ export const Street: Map = {
       },
     ],
   },
+  walls: {},
+  gameObjects: {},
+  overworld: {} as Overworld,
 };

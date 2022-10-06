@@ -1,51 +1,59 @@
-class Hud {
-  constructor() {
-    this.scoreboards = []
+import { Combatant } from "battle/combatant";
+import { Pizzas } from "content/pizzas";
+import { playerState } from "state/playerState";
 
+export class Hud {
+  public scoreboards: Combatant[];
+  public element: HTMLDivElement;
+  constructor() {
+    this.scoreboards = [];
+    this.element = {} as HTMLDivElement;
   }
 
   update() {
-    this.scoreboards.forEach(scoreboard => {
-      scoreboard.update(window.playerState.pizzas[scoreboard.id])
-    })
+    this.scoreboards.forEach((scoreboard) => {
+      scoreboard.update(playerState.pizzas[scoreboard.id]);
+    });
   }
 
   createElement() {
     if (this.element) {
-      this.element.remove()
-      this.scoreboards = []
+      this.element.remove();
+      this.scoreboards = [];
     }
     this.element = document.createElement("div");
-    this.element.classList.add("Hud")
+    this.element.classList.add("Hud");
 
-    const { playerState } = window
-    playerState.lineup.forEach(key => {
-      const pizza = playerState.pizzas[key]
+    playerState.lineup.forEach((key) => {
+      const pizza = playerState.pizzas[key];
 
-      const scoreboard = new Combatant({
-        id: key,
-        ...Pizzas[pizza.pizzaId],
-        ...pizza
-      }, null)
-      scoreboard.createElement()
-      this.scoreboards.push(scoreboard)
-      this.element.appendChild(scoreboard.hudElement)
-    })
-    this.update()
-
+      const scoreboard = new Combatant(
+        {
+          id: key,
+          ...Pizzas[pizza.pizzaId],
+          ...pizza,
+        },
+        null
+      );
+      scoreboard.createElement();
+      this.scoreboards.push(scoreboard);
+      this.element!.appendChild(scoreboard.hudElement);
+    });
+    this.update();
   }
 
-  createAndAppend(container) {
-    this.createElement()
-    container.appendChild(this.element)
+  createAndAppend(container: HTMLDivElement) {
+    this.createElement();
+    container.appendChild(this.element);
   }
 
-  init(container) {
-    this.createAndAppend(container)
+  init(container: HTMLDivElement) {
+    this.createAndAppend(container);
 
-    document.addEventListener("PLayerStateUpdated", () => this.update())
+    document.addEventListener("PLayerStateUpdated", () => this.update());
 
-    document.addEventListener("LineupChanged", () => this.createAndAppend(container))
+    document.addEventListener("LineupChanged", () =>
+      this.createAndAppend(container)
+    );
   }
-
 }

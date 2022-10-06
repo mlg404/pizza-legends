@@ -1,22 +1,31 @@
-import { playerState } from "state/playerState";
+import { MapsEnum } from "maps/interfaces";
+import { Person } from "person";
+import { PlayerState, playerState } from "state/playerState";
 import { DirectionsEnum } from "utils";
 
+interface SavedFile {
+  mapId: MapsEnum;
+  startingHeroX: number;
+  startingHeroY: number;
+  startingHeroDirection: DirectionsEnum;
+  playerState: PlayerState;
+}
 export class Progress {
-  public mapId: string;
+  public mapId: MapsEnum;
   public startingHeroX: number;
   public startingHeroY: number;
   public startingHeroDirection: DirectionsEnum;
   public saveFileKey: string;
 
   constructor() {
-    this.mapId = "DemoRoom";
+    this.mapId = MapsEnum.DEMO_ROOM;
     this.startingHeroX = 0;
     this.startingHeroY = 0;
     this.startingHeroDirection = DirectionsEnum.DOWN;
     this.saveFileKey = "PizzaLegends_SaveFile1";
   }
 
-  save(hero) {
+  save(hero: Person) {
     window.localStorage.setItem(
       this.saveFileKey,
       JSON.stringify({
@@ -34,7 +43,7 @@ export class Progress {
     );
   }
 
-  getSaveFile() {
+  getSaveFile(): SavedFile {
     const file = window.localStorage.getItem(this.saveFileKey);
 
     return file ? JSON.parse(file) : null;
@@ -49,8 +58,9 @@ export class Progress {
     this.startingHeroX = file.startingHeroX;
     this.startingHeroY = file.startingHeroY;
     this.startingHeroDirection = file.startingHeroDirection;
-    Object.keys(file.playerState).forEach(
-      (key) => (playerState[key] = file.playerState[key])
-    );
+    playerState.pizzas = file.playerState.pizzas;
+    playerState.lineup = file.playerState.lineup;
+    playerState.storyFlags = file.playerState.storyFlags;
+    playerState.items = file.playerState.items;
   }
 }

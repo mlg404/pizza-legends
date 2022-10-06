@@ -21,6 +21,7 @@ export enum EventType {
   WALK = "walk",
   STAND = "stand",
   CHANGE_MAP = "changeMap",
+  PAUSE = "pause",
 }
 
 export interface Event {
@@ -70,7 +71,7 @@ export interface ConfigObject {
 }
 
 export interface Map {
-  id: string;
+  id: MapsEnum;
   lowerSrc?: string;
   upperSrc?: string;
   gameObjects: Record<string, Person | PizzaStone>;

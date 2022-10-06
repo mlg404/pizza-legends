@@ -1,7 +1,7 @@
 import { Pizza } from "content/enemies";
 import { emitEvent } from "utils";
 
-class PlayerState {
+export class PlayerState {
   public static instance: PlayerState;
 
   public pizzas: Record<string, Pizza>;

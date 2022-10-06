@@ -1,8 +1,9 @@
+import { Overworld } from "overworld";
 import { asGridCoords, DirectionsEnum, withGrid } from "../utils";
 import { ConfigObjectType, EventType, Map, MapsEnum } from "./interfaces";
 
 export const Kitchen: Map = {
-  id: "Kitchen",
+  id: MapsEnum.KITCHEN,
   lowerSrc: "./images/maps/KitchenLower.png",
   upperSrc: "./images/maps/KitchenUpper.png",
   configObjects: {
@@ -40,4 +41,7 @@ export const Kitchen: Map = {
       },
     ],
   },
+  walls: {},
+  gameObjects: {},
+  overworld: {} as Overworld,
 };

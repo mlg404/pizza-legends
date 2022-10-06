@@ -10,7 +10,7 @@ import { ConfigObjectType, EventType, Map, MapsEnum } from "./interfaces";
 
 export const DemoRoom: Map = {
   overworld: {} as Overworld,
-  id: "DemoRoom",
+  id: MapsEnum.DEMO_ROOM,
   lowerSrc: "./images/maps/DemoLower.png",
   upperSrc: "./images/maps/DemoUpper.png",
   gameObjects: {},
